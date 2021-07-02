@@ -10,8 +10,17 @@ NAME	= ft_ping
 
 INCDIR	= includes
 
-SRCS	= main.c
-NAME_H	= ft_ping.h
+SRCS	= 	main.c \
+			checksum.c \
+			parsing.c \
+			parsing_fns.c \
+			ping_loop.c \
+			ping_prepare.c \
+			print_return_code.c
+NAME_H	= 	ft_ping.h \
+			ft_ping_errors.h \
+			ft_ping_parser.h
+
 NAME_O	= $(SRCS:.c=.o)
 FILES_O	= $(addprefix $(OBJDIR)/, $(NAME_O))
 FILES_H	= $(addprefix $(INCDIR)/, $(NAME_H))
@@ -26,6 +35,8 @@ all : $(NAME)
 
 $(NAME) : $(FILES_O) $(FILES_H) $(LIBFT) $(MLX)
 	$(CC) $(CPPFLAGS) -o $(NAME) $(FILES_O) $(LDFLAGS)
+	sudo chown root:root $(NAME)
+    sudo chmod u+s $(NAME)
  
 $(OBJDIR)/%.o: %.c $(FILES_H) | $(OBJDIR)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
