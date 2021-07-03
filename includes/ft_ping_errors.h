@@ -13,14 +13,18 @@
 #ifndef FT_PING_ERRORS_H
 # define FT_PING_ERRORS_H
 
+#include <errno.h>
+
 # define EMSG_OPT_INVALID			"invalid option."
 # define EMSG_OPT_COUNT_ERROR		"bad number of packets to transmit."
 # define EMSG_OPT_MISSING_ADDRESS	"need an address."
 # define EMSG_OPT_TTL_ERROR			"ttl out of range."
 # define EMSG_SOCKFAIL				"fail to create socket."
 # define EMSG_ADDRINFOFAIL			"fail to get address informations."
+# define EMSG_SENDTOFAIL			"sendto() fails."
+# define EMSG_RECVMSGFAIL			"recvmsg() fails."
 
-# define ERRORS_MSG_LEN				6
+# define ERRORS_MSG_LEN				8
 
 enum e_error
 {
@@ -32,7 +36,9 @@ enum e_error
 	e_error_opt_ttl_error,
 	e_error_opt_no_args,
 	e_error_socket_creation,
-	e_error_addrinfo_creation
+	e_error_addrinfo_creation,
+	e_error_sendto,
+	e_error_recvmsg
 };
 
 typedef struct	s_errors_msg

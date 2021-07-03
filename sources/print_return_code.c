@@ -20,7 +20,9 @@ static t_error_msg	*error_msgs_get(void)
 		{e_error_opt_count_error, EMSG_OPT_COUNT_ERROR},
 		{e_error_opt_ttl_error, EMSG_OPT_TTL_ERROR},
 		{e_error_socket_creation, EMSG_SOCKFAIL},
-		{e_error_addrinfo_creation, EMSG_ADDRINFOFAIL}
+		{e_error_addrinfo_creation, EMSG_ADDRINFOFAIL},
+		{e_error_sendto, EMSG_SENDTOFAIL},
+		{e_error_recvmsg, EMSG_RECVMSGFAIL}
 	};
 
 	return (msgs);

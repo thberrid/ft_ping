@@ -18,8 +18,43 @@
 # include <sys/types.h> 
 # include <sys/socket.h>
 # include <netdb.h>
+# include <netinet/ip_icmp.h>
 
-# define HELP_STRING "Usage: ft_ping [-v] [-c count] destination"
+# define HELP_STRING		"Usage: ft_ping [-v] [-c count] destination"
+
+# define IOVLEN  			32
+# define ICMP_DATA_LEN		4
+
+# define ICMP_TYPE_ECHO_REQUEST	8
+# define ICMP_CODE_ECHO_REPLY	0
+
+struct icmp_packet {
+	struct icmphdr	header;
+	char			data[ICMP_DATA_LEN];
+};
+
+/*
+struct icmphdr
+{
+	u_int8_t	type;
+	u_int8_t	code;
+	u_int16_t	checksum;
+	union
+	{
+		struct
+		{
+			u_int16_t	id;
+			u_int16_t	sequence;
+		} echo;                        
+		u_int32_t gateway;      
+		struct
+		{
+			u_int16_t __unused;
+			u_int16_t mtu;
+		} frag;                        
+	} un;
+};
+*/
 
 typedef struct	s_options
 {
@@ -32,7 +67,12 @@ typedef struct	s_options
 
 int				ping_loop(t_options *options);
 
-int 			ping_prepare(int *sockfd, struct addrinfo **addrinfo, t_options *options);
+int 			ping_prepare(struct icmp_packet *packet, int *sockfd, struct addrinfo **addrinfo, t_options *options);
+void 			ping_packet_update(struct icmp_packet *packet, int index);
+int				ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options);
+
+void			ping_print(struct icmp_packet *packet, t_options *options);
+
 unsigned short	checksum(void *data, int len);
 
 #endif

@@ -20,16 +20,19 @@ int			ping_loop(t_options *options)
 	struct addrinfo 	*addrinfo;
 	struct icmp_packet	packet;
 	
-	retrn = ping_packet_prepare(&sockfd, &addrinfo, options);
+	retrn = ping_prepare(&packet, &sockfd, &addrinfo, options);
 	if (retrn != e_error_none)
 		return (retrn);
-	index = 0;
-	while (index < options->count || options->count < 1)
+	index = 1;
+	while (index <= options->count || options->count < 1)
 	{
-		ping_packet_update();
-			// -> packet.header.un.echo.sequence = index;
-			// -> packet->header.checksum = checksum(packet, sizeof(struct icmp_packet));
-		retrn = sendto(sockfd, &packet, addrinfo->ai_addr, sizeof(struct sockaddr_in));
+		ping_packet_update(&packet, index);
+		retrn = sendto(sockfd, &packet, sizeof(struct icmp_packet), 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
+		if (retrn < 1)
+			return (e_error_sendto);
+		retrn = ping_reception(sockfd, addrinfo, options);
+		if (retrn != e_error_none)
+			return (retrn);
 		index += 1;
 	}
 	return (e_error_none);

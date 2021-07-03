@@ -78,7 +78,7 @@ int				parsing(int ac, char **av, t_options *options)
 
 	if (no_args(ac))
 		return (e_error_opt_no_args);
-	ft_bzero(options, sizeof(options));
+	ft_bzero(options, sizeof(t_options));
 	index = 1;
 	while (index < ac)
 	{
