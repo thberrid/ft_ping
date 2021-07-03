@@ -36,17 +36,17 @@ ICMP error messages contain a data section that includes a copy of the entire IP
 ## FUNCTIONS
 ```
 int getaddrinfo(const char *node,
-				const char *service,
-                const struct addrinfo *hints,
-                struct addrinfo **res);
-	#include <sys/types.h>
-    #include <sys/socket.h>
-    #include <netdb.h>
+        const char *service,
+        const struct addrinfo *hints,
+        struct addrinfo **res);
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
 ```
 
 not a bad src, thx ibm = https://www.ibm.com/support/knowledgecenter/SSLTBW_2.3.0/com.ibm.zos.v2r3.halc001/ipciccla_getaddrinfo_parm.htm
 
-- return : getaddrinfo() returns 0 if it succeeds, or some nonzero error codes
+- return : `getaddrinfo()` returns `0` if it succeeds, or some nonzero error codes
 - parameters :
 	- node : 
 			Internet host
@@ -114,25 +114,28 @@ convert IPv4 and IPv6 addresses from binary to text form
 ---
 
 `int inet_pton(int af, const char *src, void *dst);`
+
 `#include <arpa/inet.h>`
 
 convert IPv4 and IPv6 addresses from text to binary form
 
-AF_INET: ddd.ddd.ddd.ddd
+`AF_INET: ddd.ddd.ddd.ddd`
 
-AF_INET6: x:x:x:x:x:x:x:x
+`AF_INET6: x:x:x:x:x:x:x:x`
 
-0:0:0:0:0:0:0:1 can be abbreviated as ::1
+`0:0:0:0:0:0:0:1` can be abbreviated as `::1`
 
 return:
-- 1 on success
-- 0 is returned if src does not contain a character string representing a valid network address in the specified address family
-- -1 If af does not contain a valid address family
+- `1` on success
+- `0` is returned if src does not contain a character string representing a valid network address in the specified address family
+- `-1` If af does not contain a valid address family
 
 ---
 
 `int setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen);`
+
 `#include <sys/types.h>`
+
 `#include <sys/socket.h>`
 
 thx ibm : https://www.ibm.com/support/knowledgecenter/SSLTBW_2.3.0/com.ibm.zos.v2r3.hali001/csetopt.htm
@@ -140,10 +143,10 @@ thx ibm : https://www.ibm.com/support/knowledgecenter/SSLTBW_2.3.0/com.ibm.zos.v
 - return: 0 if succes, -1 on error
 - parameters:
 	- level:
-		- SOL_SOCKET (1)
-		- IPPROTO_ICMP (2)
-		- IPPROTO_TCP (6)
-		- IPPROTO_RAW (255)
+		- `SOL_SOCKET` (1)
+		- `IPPROTO_ICMP` (2)
+		- `IPPROTO_TCP` (6)
+		- `IPPROTO_RAW` (255)
 		
 		To manipulate options at the socket level, the level parameter must be set to `SOL_SOCKET`, as defined in SOCKET.H. To manipulate options at the TCP level, the level parameter must be set to `IPPROTO_TCP`
 	- optname:
@@ -159,7 +162,9 @@ thx ibm : https://www.ibm.com/support/knowledgecenter/SSLTBW_2.3.0/com.ibm.zos.v
 ---
 
 `size_t recvmsg(int sockfd, struct msghdr *msg, int flags);`
+
 `#include <sys/types.h>`
+
 `#include <sys/socket.h>`
 
 If  no  messages  are available at the socket, the receive calls wait for a message to arrive, unless the socket is nonblocking 
@@ -180,20 +185,20 @@ struct msghdr {
 	struct iovec *msg_iov;        	/* scatter/gather array describe scatter-gather locations */
 	size_t        msg_iovlen;     	/* # elements in msg_iov */
 	void         *msg_control;    	/* ancillary data, see below
-									The  field  msg_control, which has length msg_controllen, points to a buffer for other protocol control-related messages or miscellaneous ancillary data
+					The  field  msg_control, which has length msg_controllen, points to a buffer for other protocol control-related messages or miscellaneous ancillary data
 									*/
 	size_t        msg_controllen; 	/* ancillary data buffer len */
 	int           msg_flags;      	/* flags on received message */
 };
 
-struct iovec {                    /* Scatter/gather array items */
-	void  *iov_base;              /* Starting address */
-	size_t iov_len;               /* Number of bytes to transfer */
+struct iovec {                    	/* Scatter/gather array items */
+	void  *iov_base;              	/* Starting address */
+	size_t iov_len;               	/* Number of bytes to transfer */
 };
 
 struct cmsghdr {
 	size_t cmsg_len;    /* Data byte count, including header
-							(type is socklen_t in POSIX) */
+				(type is socklen_t in POSIX) */
 	int    cmsg_level;  /* Originating protocol */
 	int    cmsg_type;   /* Protocol-specific type */
 	/* followed by unsigned char cmsg_data[]; */
@@ -207,13 +212,13 @@ The msg_flags field in the msghdr is set on return of recvmsg() : `MSG_EOR` (end
 ---
 ```
 size_t sendto(	int sockfd,
-				const void *buf, 
-				size_t len, 
-				int flags,
+		const void *buf, 
+		size_t len, 
+		int flags,
                 const struct sockaddr *dest_addr, 
-				socklen_t addrlen);
-	#include <sys/types.h>
-    #include <sys/socket.h>
+		socklen_t addrlen);
+#include <sys/types.h>
+   #include <sys/socket.h>
 ```
 used to transmit a message to another socket
 
@@ -230,8 +235,8 @@ The message is found in buf and has length len
 
 ```
 int socket(int domain, int type, int protocol);
-	#include <sys/types.h> 
-    #include <sys/socket.h>
+#include <sys/types.h> 
+#include <sys/socket.h>
 ```
 
 socket() creates an endpoint for communication and returns a file descriptor
@@ -271,26 +276,33 @@ struct timezone {
 	int tz_dsttime;         /* type of DST correction */
 };
 ```
-- return: return 0 for success, or -1 for failure + errno
+
+- return: return `0` for success, or `-1` for failure + errno
 - parameters: The use of the timezone structure is obsolete; the tz argument should normally be specified as NULL
 		
 ---
-```
-pid_t getpid(void);
-#include <sys/types.h>
-#include <unistd.h>
-```	
+
+
+`pid_t getpid(void);`
+
+`#include <sys/types.h>`
+
+`#include <unistd.h>`
+
 - return id of current process
 - cannot fail
 	
 pid_t	=> int
 
 ---
-```
-uid_t getuid(void);
-#include <unistd.h>
-#include <sys/types.h>
-```	
+
+`uid_t getuid(void);`
+
+`#include <unistd.h>`
+
+`#include <sys/types.h>`
+	
+
 - return real user ID of calling process
 - cannot fail
 	
@@ -299,21 +311,25 @@ uid		=> unsigned int
 ---
 
 `void	_exit(int status);`
+
 `#include <unistd.h>`
-status 0 ok
+
+status `0` ok
 
 ---
-```
-typedef void (*sighandler_t)(int);
-sighandler_t signal(int signum, sighandler_t handler);
-#include <signal.h>
-```
+
+`typedef void (*sighandler_t)(int);`
+
+`sighandler_t signal(int signum, sighandler_t handler);`
+
+`#include <signal.h>`
 
 Avoid its use: use sigaction(2) instead
 
 ---
 
 `unsigned int alarm(unsigned int seconds);`
+
 `#include <unistd.h>`
 
 alarm() arranges for a SIGALRM signal to be delivered to the calling process in seconds seconds.
