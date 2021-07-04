@@ -15,7 +15,7 @@
 static void	ipheader_prepare(struct msghdr *ipheader, struct iovec *s_iovec, char *s_iov_base, struct addrinfo *addrinfo)
 {
 	bzero(ipheader, sizeof(struct msghdr));
-	ft_memset (s_iov_base, 0x6e, IOVLEN);
+	ft_memset(s_iov_base, 0x6e, IOVLEN);
 	ipheader->msg_name = addrinfo->ai_addr;                                           
 	ipheader->msg_namelen = addrinfo->ai_addrlen;
 	ipheader->msg_iovlen = 1;
@@ -27,17 +27,16 @@ static void	ipheader_prepare(struct msghdr *ipheader, struct iovec *s_iovec, cha
 int			ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options)
 {
 	int				retrn;
-	struct msghdr	ipheader;
+	struct msghdr	msg;
 	struct iovec	s_iovec;
 	char			s_iov_base[IOVLEN];
 
-	ipheader_prepare(&ipheader, &s_iovec, s_iov_base, addrinfo);
-	(void)options;
+	ipheader_prepare(&msg, &s_iovec, s_iov_base, addrinfo);
 	if (!ft_strcmp(options->address, "localhost"))
-		recvmsg(sockfd, &ipheader, 0);
-	retrn = recvmsg(sockfd, &ipheader, 0);
+		recvmsg(sockfd, &msg, 0);
+	retrn = recvmsg(sockfd, &msg, 0);
 	if (retrn < 1)
 		return (retrn);
-	ping_print((struct icmp_packet *)&ipheader + sizeof(struct ip), options);
+	ping_print_loop((struct ip *)s_iov_base, options);
 	return (e_error_none);
 }

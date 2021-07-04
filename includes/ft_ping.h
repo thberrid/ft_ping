@@ -19,11 +19,17 @@
 # include <sys/socket.h>
 # include <netdb.h>
 # include <netinet/ip_icmp.h>
+# include <arpa/inet.h>
 
 # define HELP_STRING		"Usage: ft_ping [-v] [-c count] destination"
 
-# define IOVLEN  			32
-# define ICMP_DATA_LEN		4
+/*
+	iovlen = sizeof ip header (20)	+
+					icmp hedr (8)	+
+					ping data (56)
+*/
+# define IOVLEN  			84
+# define ICMP_DATA_LEN		56
 
 # define ICMP_TYPE_ECHO_REQUEST	8
 # define ICMP_CODE_ECHO_REPLY	0
@@ -69,10 +75,10 @@ int				ping_loop(t_options *options);
 
 int 			ping_prepare(struct icmp_packet *packet, int *sockfd, struct addrinfo **addrinfo, t_options *options);
 void 			ping_packet_update(struct icmp_packet *packet, int index);
+unsigned short	checksum(void *data, int len);
 int				ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options);
 
-void			ping_print(struct icmp_packet *packet, t_options *options);
-
-unsigned short	checksum(void *data, int len);
+void 			ping_print_intro(struct addrinfo *addrinfo, t_options *options);
+void			ping_print_loop(struct ip *ipheader, t_options *options);
 
 #endif

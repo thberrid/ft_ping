@@ -38,7 +38,10 @@ void				print_return_code(enum e_error this_enum)
 	while (index < ERRORS_MSG_LEN)
 	{
 		if (this_enum == msgs[index].enum_code)
+		{
 			ft_printf("ft_ping: %s\n", msgs[index].msg);
+			return ;
+		}
 		index += 1;
 	}
 	return ;

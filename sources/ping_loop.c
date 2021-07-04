@@ -23,6 +23,7 @@ int			ping_loop(t_options *options)
 	retrn = ping_prepare(&packet, &sockfd, &addrinfo, options);
 	if (retrn != e_error_none)
 		return (retrn);
+	ping_print_intro(addrinfo, options);
 	index = 1;
 	while (index <= options->count || options->count < 1)
 	{

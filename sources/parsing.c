@@ -82,6 +82,7 @@ int				parsing(int ac, char **av, t_options *options)
 	index = 1;
 	while (index < ac)
 	{
+		next_index = 1;
 		next_arg = NULL;
 		if (index + 1 < ac)
 			next_arg = av[index + 1];
