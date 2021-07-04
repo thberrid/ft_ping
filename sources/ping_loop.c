@@ -27,8 +27,11 @@ int			ping_loop(t_options *options)
 	index = 1;
 	while (index <= options->count || options->count < 1)
 	{
+		ft_printf(":: 0\n");
 		ping_packet_update(&packet, index);
+		ft_printf(":: 1\n");
 		retrn = sendto(sockfd, &packet, sizeof(struct icmp_packet), 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
+		ft_printf(":: 2\n");
 		if (retrn < 1)
 			return (e_error_sendto);
 		retrn = ping_reception(sockfd, addrinfo, options);

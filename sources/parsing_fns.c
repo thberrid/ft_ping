@@ -39,8 +39,8 @@ int		parsing_ttl(char *this, char *next, t_options *options)
 	(void)this;
 	if (next && ft_isnumeric(next))
 	{
-		options->ttl = ft_atoi(next);
-		if (options->ttl > 0)
+		options->ttl_max = ft_atoi(next);
+		if (options->ttl_max > 0)
 			return (e_error_none);
 	}
 	return (e_error_opt_ttl_error);

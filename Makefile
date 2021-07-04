@@ -27,8 +27,8 @@ NAME_O	= $(SRCS:.c=.o)
 FILES_O	= $(addprefix $(OBJDIR)/, $(NAME_O))
 FILES_H	= $(addprefix $(INCDIR)/, $(NAME_H))
 
-CFLAGS= -Wall -Wextra -Werror #-g3 -fsanitize=address
-CPPFLAGS= -I ./$(INCDIR) -I ./libft/includes -I ./minilibx-linux
+CFLAGS= -Wall -Wextra -Werror -g3 #-fsanitize=address
+CPPFLAGS= -I ./$(INCDIR) -I ./libft/includes
 LDFLAGS = -L ./libft/ -lft
 
 LIBFT	= ./libft/libft.a

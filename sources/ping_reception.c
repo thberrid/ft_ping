@@ -32,11 +32,11 @@ int			ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options)
 	char			s_iov_base[IOVLEN];
 
 	ipheader_prepare(&msg, &s_iovec, s_iov_base, addrinfo);
-	if (!ft_strcmp(options->address, "localhost"))
+	if (!ft_strcmp(options->hostname, "localhost"))
 		recvmsg(sockfd, &msg, 0);
 	retrn = recvmsg(sockfd, &msg, 0);
 	if (retrn < 1)
 		return (retrn);
-	ping_print_loop((struct ip *)s_iov_base, options);
+	ping_print_loop((struct ip *)s_iov_base, addrinfo, options);
 	return (e_error_none);
 }

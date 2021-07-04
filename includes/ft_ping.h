@@ -67,9 +67,21 @@ typedef struct	s_options
 	char		help_required;
 	char		verbose_required;
 	int			count;
-	int			ttl;
-	char		*address;
+	int			ttl_max;
+	char		*hostname;
+	char		*address_ipv4;
 }				t_options;
+
+typedef struct	s_ping_stats
+{
+	int				sent_count;
+	int				received_count;
+	struct timeval	total;
+	struct timeval	min;
+	struct timeval	avg;
+	struct timeval	max;
+	struct timeval	mdev;
+}				t_ping_stats;
 
 int				ping_loop(t_options *options);
 
@@ -79,6 +91,6 @@ unsigned short	checksum(void *data, int len);
 int				ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options);
 
 void 			ping_print_intro(struct addrinfo *addrinfo, t_options *options);
-void			ping_print_loop(struct ip *ipheader, t_options *options);
+void			ping_print_loop(struct ip *ipheader, struct addrinfo *addrinfo, t_options *options);
 
 #endif

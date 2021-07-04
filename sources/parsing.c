@@ -32,7 +32,7 @@ static int		parse_this(char *this, char *next, t_options *options, int *next_ind
 
 	if (this[0] != '-')
 	{
-		options->address = this;
+		options->hostname = this;
 		return (e_error_none);
 	}
 	if (this[1] == '\0'){
@@ -91,7 +91,7 @@ int				parsing(int ac, char **av, t_options *options)
 			return (retrn);
 		index += next_index;
 	}
-	if (no_address(options->address))
+	if (no_address(options->hostname))
 		return (e_error_opt_no_address);
 	return (e_error_none);
 }

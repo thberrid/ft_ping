@@ -14,19 +14,18 @@
 
 void	ping_print_intro(struct addrinfo *addrinfo, t_options *options)
 {
-	char address_ip[16];
+	char address_ip[14];
 
 	(void)options;
 	ft_bzero(address_ip, sizeof(address_ip));
-	ft_printf("> %d\n", ICMP_DATA_LEN);
 	inet_ntop(
 		addrinfo->ai_addr->sa_family,
 		addrinfo->ai_addr->sa_data + 2, 
 		address_ip,
 		addrinfo->ai_addrlen
 	);
-	ft_printf("PING %s (%s) %d(%d) bytes of data",
-		options->address,
+	ft_printf("PING %s (%s) %d(%d) bytes of data\n",
+		addrinfo->ai_canonname,
 		address_ip,
 		ICMP_DATA_LEN,
 		ICMP_DATA_LEN + sizeof(struct icmphdr) + sizeof(struct ip)
@@ -34,20 +33,28 @@ void	ping_print_intro(struct addrinfo *addrinfo, t_options *options)
 	return ;
 }
 
-void	ping_print_loop(struct ip *ipheader, t_options *options)
+void	ping_print_loop(struct ip *ipheader, struct addrinfo *addrinfo, t_options *options)
 {
-//	struct	icmp_packet *icmp;
+	char address_ip[14];
+	struct icmphdr *icmp;
 
 	(void)options;
-	(void)ipheader;
-/*
-	icmp = (struct	icmp_packet *)((char *)ipheader + sizeof(struct ip));
-	ft_printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=%d\n", 
-		sizeof(struct icmphdr),
-
-		ft_htons(icmp->header.un.echo.sequence));
+	ft_bzero(address_ip, sizeof(address_ip));
+	inet_ntop(
+		addrinfo->ai_addr->sa_family,
+		addrinfo->ai_addr->sa_data + 2, 
+		address_ip,
+		addrinfo->ai_addrlen
+	);
+	icmp = (struct icmphdr *)((char *)ipheader + sizeof(struct ip));
+	ft_printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=0.053 ms\n",
+		ICMP_DATA_LEN + sizeof(struct icmphdr),
+		addrinfo->ai_canonname,
+		address_ip,
+		ft_htons(icmp->un.echo.sequence),
+		ipheader->ip_ttl
+	);
 	return ;
-	*/
 }
 
 /*

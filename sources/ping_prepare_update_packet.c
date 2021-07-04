@@ -27,7 +27,8 @@ static int	set_addrinfo(struct addrinfo **addrinfo, t_options *options)
 	ft_bzero(&hint, sizeof(struct addrinfo));
 	hint.ai_family = AF_INET;
 	hint.ai_protocol = IPPROTO_ICMP;
-	if (getaddrinfo(options->address, NULL, &hint, addrinfo) != 0)
+	hint.ai_flags = AI_CANONNAME;
+	if (getaddrinfo(options->hostname, NULL, &hint, addrinfo) != 0)
 		return (e_error_addrinfo_creation);
 	return (e_error_none);
 }
