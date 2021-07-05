@@ -11,6 +11,7 @@ NAME	= ft_ping
 INCDIR	= includes
 
 SRCS	= 	main.c \
+			check_requirements.c \
 			checksum.c \
 			parsing.c \
 			parsing_fns.c \
@@ -37,8 +38,8 @@ all : $(NAME)
 
 $(NAME) : $(FILES_O) $(FILES_H) $(LIBFT) $(MLX)
 	$(CC) $(CPPFLAGS) -o $(NAME) $(FILES_O) $(LDFLAGS)
-	sudo chown root:root $(NAME)
-	sudo chmod u+s $(NAME)
+#	sudo chown root:root $(NAME)
+#	sudo chmod u+s $(NAME)
 
 $(OBJDIR)/%.o: %.c $(FILES_H) | $(OBJDIR)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
@@ -53,11 +54,11 @@ $(LIBFT) :
 .PHONY : clean
 clean :
 	$(RM) -f $(FILES_O)
-	make -C ./libft clean
+	#make -C ./libft clean
 
 .PHONY : fclean
 fclean : clean
-	make -C ./libft fclean
+	#make -C ./libft fclean
 	$(RM) $(NAME)
 
 .PHONY : re

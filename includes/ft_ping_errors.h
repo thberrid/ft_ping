@@ -16,6 +16,7 @@
 #include <errno.h>
 
 # define EMSG_OPT_INVALID			"invalid option."
+# define EMSG_USERNOTROOT			"ft_ping needs to be launch with sudo."
 # define EMSG_OPT_COUNT_ERROR		"bad number of packets to transmit."
 # define EMSG_OPT_MISSING_ADDRESS	"need an address."
 # define EMSG_OPT_TTL_ERROR			"ttl out of range."
@@ -24,11 +25,12 @@
 # define EMSG_SENDTOFAIL			"sendto() fails."
 # define EMSG_RECVMSGFAIL			"recvmsg() fails."
 
-# define ERRORS_MSG_LEN				8
+# define ERRORS_MSG_LEN				9
 
 enum e_error
 {
 	e_error_none = 0,
+	e_error_notroot,
 	e_error_opt_no_address,
 	e_error_help_printed,
 	e_error_opt_invalid,

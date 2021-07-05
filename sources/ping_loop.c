@@ -25,11 +25,19 @@ int			ping_loop(t_options *options)
 		return (retrn);
 	ping_print_intro(addrinfo, options);
 	index = 1;
+	ft_printf("?0 %p\n", options);
+	ft_printf("?1 %p\n", options->count);
+	ft_printf("?2 %d\n", options->count);
 	while (index <= options->count || options->count < 1)
 	{
 		ft_printf(":: 0\n");
 		ping_packet_update(&packet, index);
 		ft_printf(":: 1\n");
+	//	print_memory(addrinfo->ai_addr, addrinfo->ai_addrlen);
+		ft_printf("// %p\n", addrinfo);
+		ft_printf(":: 1.1\n");
+		ft_printf("// %p\n", addrinfo->ai_addr);
+		ft_printf(":: 1.2\n");
 		retrn = sendto(sockfd, &packet, sizeof(struct icmp_packet), 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
 		ft_printf(":: 2\n");
 		if (retrn < 1)

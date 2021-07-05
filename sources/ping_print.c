@@ -30,6 +30,7 @@ void	ping_print_intro(struct addrinfo *addrinfo, t_options *options)
 		ICMP_DATA_LEN,
 		ICMP_DATA_LEN + sizeof(struct icmphdr) + sizeof(struct ip)
 	);
+	ft_printf(":: -1\n");
 	return ;
 }
 

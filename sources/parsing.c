@@ -52,17 +52,7 @@ static int		parse_this(char *this, char *next, t_options *options, int *next_ind
 	return (e_error_opt_invalid);
 }
 
-static int		no_args(int ac)
-{
-	if (ac < 2)
-	{
-		ft_putendl(HELP_STRING);
-		return (1);
-	}
-	return (0);
-}
-
-static int		no_address(const char *address)
+static int	no_address(const char *address)
 {
 	if (!address)
 		return (1);
@@ -76,8 +66,6 @@ int				parsing(int ac, char **av, t_options *options)
 	int			next_index;
 	char		*next_arg;
 
-	if (no_args(ac))
-		return (e_error_opt_no_args);
 	ft_bzero(options, sizeof(t_options));
 	index = 1;
 	while (index < ac)

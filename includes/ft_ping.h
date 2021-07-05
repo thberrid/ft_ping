@@ -21,20 +21,22 @@
 # include <netinet/ip_icmp.h>
 # include <arpa/inet.h>
 
-# define HELP_STRING		"Usage: ft_ping [-v] [-c count] destination"
+# define HELP_STRING		"Usage: sudo ./ft_ping [-v] [-c count] destination"
 
 /*
 	iovlen = sizeof ip header (20)	+
 					icmp hedr (8)	+
 					ping data (56)
 */
-# define IOVLEN  			84
-# define ICMP_DATA_LEN		56
+
+# define IOVLEN  				84
+# define ICMP_DATA_LEN			56
 
 # define ICMP_TYPE_ECHO_REQUEST	8
 # define ICMP_CODE_ECHO_REPLY	0
 
-struct icmp_packet {
+struct icmp_packet
+{
 	struct icmphdr	header;
 	char			data[ICMP_DATA_LEN];
 };
@@ -82,6 +84,8 @@ typedef struct	s_ping_stats
 	struct timeval	max;
 	struct timeval	mdev;
 }				t_ping_stats;
+
+int				check_requirements(int ac);
 
 int				ping_loop(t_options *options);
 
