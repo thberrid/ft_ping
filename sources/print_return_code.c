@@ -40,7 +40,7 @@ void				print_return_code(enum e_error this_enum)
 	{
 		if (this_enum == msgs[index].enum_code)
 		{
-			ft_printf("ft_ping: %s\n", msgs[index].msg);
+			ft_dprintf(2, "ft_ping: %s\n", msgs[index].msg);
 			return ;
 		}
 		index += 1;

@@ -96,5 +96,6 @@ int				ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options)
 
 void 			ping_print_intro(struct addrinfo *addrinfo, t_options *options);
 void			ping_print_loop(struct ip *ipheader, struct addrinfo *addrinfo, t_options *options);
+void			ping_print_stats(struct addrinfo *addrinfo);
 
 #endif

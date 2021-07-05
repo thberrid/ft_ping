@@ -14,7 +14,7 @@
 
 void	ping_print_intro(struct addrinfo *addrinfo, t_options *options)
 {
-	char address_ip[14];
+	char address_ip[16];
 
 	(void)options;
 	ft_bzero(address_ip, sizeof(address_ip));
@@ -24,19 +24,30 @@ void	ping_print_intro(struct addrinfo *addrinfo, t_options *options)
 		address_ip,
 		addrinfo->ai_addrlen
 	);
-	ft_printf("PING %s (%s) %d(%d) bytes of data\n",
+	ft_printf("PING %s (%s) %d(%d) bytes of data.\n",
 		addrinfo->ai_canonname,
 		address_ip,
 		ICMP_DATA_LEN,
 		ICMP_DATA_LEN + sizeof(struct icmphdr) + sizeof(struct ip)
 	);
-	ft_printf(":: -1\n");
 	return ;
+}
+
+void	ping_print_stats(struct addrinfo *addrinfo)
+{
+	ft_printf("\n--- %s ping statistics ---\n", addrinfo->ai_canonname);
+	ft_printf("%d packets transmitted, %d received, %d%% loss, time %dms\n",
+		1,
+		1,
+		0,
+		0
+	);
+	ft_printf("rtt min/avg/max/mdev = xxxxxxxxxxxx\n");
 }
 
 void	ping_print_loop(struct ip *ipheader, struct addrinfo *addrinfo, t_options *options)
 {
-	char address_ip[14];
+	char address_ip[16];
 	struct icmphdr *icmp;
 
 	(void)options;
@@ -55,6 +66,7 @@ void	ping_print_loop(struct ip *ipheader, struct addrinfo *addrinfo, t_options *
 		ft_htons(icmp->un.echo.sequence),
 		ipheader->ip_ttl
 	);
+	print_memory((char *)ipheader + sizeof(struct ip), sizeof(struct icmp_packet));
 	return ;
 }
 

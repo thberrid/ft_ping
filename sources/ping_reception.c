@@ -32,8 +32,8 @@ int			ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options)
 	char			s_iov_base[IOVLEN];
 
 	ipheader_prepare(&msg, &s_iovec, s_iov_base, addrinfo);
-	if (!ft_strcmp(options->hostname, "localhost"))
-		recvmsg(sockfd, &msg, 0);
+//	if (!ft_strcmp(options->hostname, "localhost"))
+	recvmsg(sockfd, &msg, 0);
 	retrn = recvmsg(sockfd, &msg, 0);
 	if (retrn < 1)
 		return (retrn);
