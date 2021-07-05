@@ -20,6 +20,7 @@
 # include <netdb.h>
 # include <netinet/ip_icmp.h>
 # include <arpa/inet.h>
+# include <signal.h>
 
 # define HELP_STRING		"Usage: sudo ./ft_ping [-v] [-c count] destination"
 
@@ -66,7 +67,6 @@ struct icmphdr
 
 typedef struct	s_options
 {
-	char		help_required;
 	char		verbose_required;
 	int			count;
 	int			ttl_max;
@@ -84,6 +84,14 @@ typedef struct	s_ping_stats
 	struct timeval	max;
 	struct timeval	mdev;
 }				t_ping_stats;
+
+typedef struct	s_pingdata
+{
+	int				sequence;
+	struct addrinfo	addrinfo;
+	t_options		options;
+}				t_pingdata;
+
 
 int				check_requirements(int ac);
 

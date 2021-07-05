@@ -17,7 +17,6 @@ int		parsing_help(char *this, char *next, t_options *options)
 {
 	(void)this;
 	(void)next;
-	options->help_required = 1;
 	ft_putendl(HELP_STRING);
 	return (e_error_help_printed);
 }

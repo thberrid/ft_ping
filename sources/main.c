@@ -13,7 +13,9 @@
 #include <ft_ping.h>
 #include <ft_ping_parser.h>
 
-int main(int ac, char **av)
+t_pingdata	*g_pingu;
+
+int 		main(int ac, char **av)
 {
 	t_options	options;
 	int			retrn;
@@ -21,8 +23,14 @@ int main(int ac, char **av)
 	retrn = check_requirements(ac);
 	if (retrn == e_error_none)
 		retrn = parsing(ac, av, &options);
+	signal(SIGALRM, ping_send);
+	signal(SIGINT, sig_int);
+	retrn = ping_prepare(options);
 	if (retrn == e_error_none)
-		retrn = ping_loop(&options);
+	{
+		ping_print_intro(options);
+		ping_send(SIGALRM);
+	}
 	print_return_code(retrn);
 	return (retrn);
 }

@@ -20,13 +20,21 @@ int			ping_loop(t_options *options)
 	struct addrinfo 	*addrinfo;
 	struct icmp_packet	packet;
 	
-	retrn = ping_prepare(&packet, &sockfd, &addrinfo, options);
+
+
+	ping_packet_update(&packet, 1);
+	retrn = sendto(sockfd, &packet, sizeof(struct icmp_packet), 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
+	if (retrn < 1)
+		return (e_error_sendto);
+	retrn = ping_reception(sockfd, addrinfo, options);
 	if (retrn != e_error_none)
 		return (retrn);
-	ping_print_intro(addrinfo, options);
-	index = 1;
-	while (index <= options->count || options->count < 1)
+	while (1)
 	{
+		// listening...
+	}
+		/*
+//		index <= options->count || options->count < 1
 		ping_packet_update(&packet, index);
 		retrn = sendto(sockfd, &packet, sizeof(struct icmp_packet), 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
 		if (retrn < 1)
@@ -35,7 +43,7 @@ int			ping_loop(t_options *options)
 		if (retrn != e_error_none)
 			return (retrn);
 		index += 1;
-	}
+		*/
 	ping_print_stats(addrinfo);
 	return (e_error_none);
 }

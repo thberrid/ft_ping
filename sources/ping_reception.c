@@ -22,21 +22,30 @@ static void	ipheader_prepare(struct msghdr *ipheader, struct iovec *s_iovec, cha
 	ipheader->msg_iov = s_iovec;
 	s_iovec->iov_base = s_iov_base;
 	s_iovec->iov_len = IOVLEN;
-}	
+}
 
 int			ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options)
 {
-	int				retrn;
-	struct msghdr	msg;
-	struct iovec	s_iovec;
-	char			s_iov_base[IOVLEN];
+	int					retrn;
+	struct msghdr		msg;
+	struct icmp_packet	*icmp;
+	struct iovec		s_iovec;
+	char				s_iov_base[IOVLEN];
+
 
 	ipheader_prepare(&msg, &s_iovec, s_iov_base, addrinfo);
-//	if (!ft_strcmp(options->hostname, "localhost"))
-	recvmsg(sockfd, &msg, 0);
 	retrn = recvmsg(sockfd, &msg, 0);
 	if (retrn < 1)
 		return (retrn);
 	ping_print_loop((struct ip *)s_iov_base, addrinfo, options);
+	alarm(2);
+	/*
+	if (!ft_strcmp(options->hostname, "localhost"))
+		recvmsg(sockfd, &msg, 0);
+	retrn = recvmsg(sockfd, &msg, 0);
+	if (retrn < 1)
+		return (retrn);
+	ping_print_loop((struct ip *)s_iov_base, addrinfo, options);
+	*/
 	return (e_error_none);
 }
