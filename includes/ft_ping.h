@@ -17,6 +17,7 @@
 # include <ft_ping_errors.h>
 # include <sys/types.h> 
 # include <sys/socket.h>
+# include <sys/time.h>
 # include <netdb.h>
 # include <netinet/ip_icmp.h>
 # include <arpa/inet.h>
@@ -32,6 +33,8 @@
 
 # define IOVLEN  				84
 # define ICMP_DATA_LEN			56
+
+# define PING_INTERVAL			2
 
 # define ICMP_TYPE_ECHO_REQUEST	8
 # define ICMP_CODE_ECHO_REPLY	0
@@ -85,14 +88,31 @@ typedef struct	s_ping_stats
 	struct timeval	mdev;
 }				t_ping_stats;
 
+typedef struct	s_pingstats
+{
+	unsigned int	lost;
+	unsigned int	received;
+	long			time;
+	long			min;
+	long			max;
+	long			avg;
+	long			mdev;
+}				t_pingstats;
+
+# define NOTHING_SEND	0
+# define NOT_RECEIVED	1
+# define RECEIVED		2
+
 typedef struct	s_pingdata
 {
 	int					sockfd;
 	int					sequence;
+	char 				status_previous_ping;
 	struct icmp_packet	sendpacket;
 	struct addrinfo		*addrinfo;
 	char 				address_ip[16];
 	t_options			*options;
+	t_pingstats			stats;
 }				t_pingdata;
 
 extern			t_pingdata g_pingu;
@@ -101,10 +121,14 @@ int				check_requirements(int ac);
 
 unsigned short	checksum(void *data, int len);
 
-int 			ping_prepare(int ac, char **av, t_options *options);
-int				ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options);
+void			ping(int signum);
 
-void			ping_send(int signum);
+int 			ping_prepare(int ac, char **av, t_options *options);
+int				ping_send(int sockfd, struct addrinfo *addrinfo, struct icmp_packet *packet, int sequence);
+int				ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options, int sequence);
+
+int				ping_istimeout(struct timeval *start);
+
 void			ping_end(int signum);
 
 void 			ping_print_intro(char *address_ip, struct addrinfo *addrinfo);

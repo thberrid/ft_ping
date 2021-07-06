@@ -12,34 +12,20 @@
 
 #include <ft_ping.h>
 
-static void		ping_packet_update(struct icmp_packet *packet)
+static void		ping_packet_update(struct icmp_packet *packet, int sequence)
 {
-	int		sequence;
-
-	sequence = ft_htons(packet->header.un.echo.sequence);
-	packet->header.un.echo.sequence = ft_htons(sequence + 1);
+	packet->header.un.echo.sequence = sequence;
 	packet->header.checksum = 0;
 	packet->header.checksum = checksum(packet, sizeof(struct icmp_packet));
 }
 
-void			ping_send(int signum)
+int				ping_send(int sockfd, struct addrinfo *addrinfo, struct icmp_packet *packet, int sequence)
 {
 	int		retrn;
 
-	if (signum != SIGALRM)
-		return ;
-	ping_packet_update(&g_pingu.sendpacket);
-	retrn = sendto(g_pingu.sockfd, &g_pingu.sendpacket, sizeof(struct icmp_packet), 0, g_pingu.addrinfo->ai_addr, g_pingu.addrinfo->ai_addrlen);
-	if (retrn)
-	{
-		retrn = ping_reception(g_pingu.sockfd, g_pingu.addrinfo, g_pingu.options);
-		if (retrn != e_error_none)
-		{
-			print_return_code(e_error_sendto);
-			exit(e_error_sendto);
-		}
-		return ;
-	}
-	print_return_code(e_error_sendto);
-	exit(e_error_sendto);
+	ping_packet_update(packet, sequence);
+	retrn = sendto(sockfd, packet, sizeof(struct icmp_packet), 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
+	if (retrn <= 0)
+		return (e_error_sendto);
+	return (e_error_none);
 }

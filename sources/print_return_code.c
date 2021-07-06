@@ -23,7 +23,8 @@ static t_error_msg	*error_msgs_get(void)
 		{e_error_addrinfo_creation, EMSG_ADDRINFOFAIL},
 		{e_error_sendto, EMSG_SENDTOFAIL},
 		{e_error_notroot, EMSG_USERNOTROOT},
-		{e_error_recvmsg, EMSG_RECVMSGFAIL}
+		{e_error_recvmsg, EMSG_RECVMSGFAIL},
+		{e_error_gettimeofday, EMSG_TIMEOFDAYFAIL}
 	};
 
 	return (msgs);

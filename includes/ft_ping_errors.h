@@ -24,8 +24,9 @@
 # define EMSG_ADDRINFOFAIL			"fail to get address informations."
 # define EMSG_SENDTOFAIL			"sendto() fails."
 # define EMSG_RECVMSGFAIL			"recvmsg() fails."
+# define EMSG_TIMEOFDAYFAIL			"gettimeofday() fails."
 
-# define ERRORS_MSG_LEN				9
+# define ERRORS_MSG_LEN				10
 
 enum e_error
 {
@@ -40,7 +41,8 @@ enum e_error
 	e_error_socket_creation,
 	e_error_addrinfo_creation,
 	e_error_sendto,
-	e_error_recvmsg
+	e_error_recvmsg,
+	e_error_gettimeofday
 };
 
 typedef struct	s_errors_msg

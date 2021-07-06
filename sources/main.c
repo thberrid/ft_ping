@@ -20,12 +20,14 @@ int 		main(int ac, char **av)
 	int			retrn;
 
 	retrn = check_requirements(ac);
+	ft_bzero(&g_pingu, sizeof(t_pingdata));
 	if (retrn == e_error_none)
 		retrn = ping_prepare(ac, av, &options);
 	if (retrn == e_error_none)
 	{
 		ping_print_intro(g_pingu.address_ip, g_pingu.addrinfo);
-		ping_send(SIGALRM);
+		g_pingu.status_previous_ping = NOTHING_SEND;
+		ping(SIGALRM);
 		while (1)						// listening...
 			;
 	}
