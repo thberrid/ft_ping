@@ -12,14 +12,27 @@
 
 #include <ft_ping.h>
 
-void		ping_send(int signum)
+static void		ping_packet_update(struct icmp_packet *packet)
 {
-	ft_printf("\n\nsignum: %d\n\n", signum);
-	ping_packet_update(&packet, 1);
-	retrn = sendto(sockfd, &packet, sizeof(struct icmp_packet), 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
+	int		sequence;
+
+	sequence = ft_htons(packet->header.un.echo.sequence);
+	packet->header.un.echo.sequence = ft_htons(sequence + 1);
+	packet->header.checksum = 0;
+	packet->header.checksum = checksum(packet, sizeof(struct icmp_packet));
+}
+
+void			ping_send(int signum)
+{
+	int		retrn;
+
+	if (signum != SIGALRM)
+		return ;
+	ping_packet_update(&g_pingu.sendpacket);
+	retrn = sendto(g_pingu.sockfd, &g_pingu.sendpacket, sizeof(struct icmp_packet), 0, g_pingu.addrinfo->ai_addr, g_pingu.addrinfo->ai_addrlen);
 	if (retrn)
 	{
-		retrn = ping_reception(sockfd, addrinfo, options);
+		retrn = ping_reception(g_pingu.sockfd, g_pingu.addrinfo, g_pingu.options);
 		if (retrn != e_error_none)
 		{
 			print_return_code(e_error_sendto);

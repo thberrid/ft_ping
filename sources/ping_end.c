@@ -1,20 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   sig_int.c                                          :+:      :+:    :+:   */
+/*   ping_end.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thberrid <thberrid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/05 19:44:51 by thberrid          #+#    #+#             */
-/*   Updated: 2021/07/05 19:45:03 by thberrid         ###   ########.fr       */
+/*   Created: 2021/07/06 18:59:37 by thberrid          #+#    #+#             */
+/*   Updated: 2021/07/06 18:59:41 by thberrid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ping.h>
 
-void		sig_int(int signum)
+void		ping_end(int signum)
 {
-	ft_printf("\n\nsignum: %d\n\n", signum);
-	ping_print_stats(addrinfo);
-	exit(SIGINT);
+	ping_print_stats(g_pingu.addrinfo);
+	exit(signum);
 }

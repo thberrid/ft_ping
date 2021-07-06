@@ -11,9 +11,8 @@
 /* ************************************************************************** */
 
 #include <ft_ping.h>
-#include <ft_ping_parser.h>
 
-t_pingdata	*g_pingu;
+t_pingdata	g_pingu;
 
 int 		main(int ac, char **av)
 {
@@ -22,14 +21,13 @@ int 		main(int ac, char **av)
 
 	retrn = check_requirements(ac);
 	if (retrn == e_error_none)
-		retrn = parsing(ac, av, &options);
-	signal(SIGALRM, ping_send);
-	signal(SIGINT, sig_int);
-	retrn = ping_prepare(options);
+		retrn = ping_prepare(ac, av, &options);
 	if (retrn == e_error_none)
 	{
-		ping_print_intro(options);
+		ping_print_intro(g_pingu.address_ip, g_pingu.addrinfo);
 		ping_send(SIGALRM);
+		while (1)						// listening...
+			;
 	}
 	print_return_code(retrn);
 	return (retrn);

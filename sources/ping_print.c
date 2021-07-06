@@ -12,11 +12,8 @@
 
 #include <ft_ping.h>
 
-void	ping_print_intro(struct addrinfo *addrinfo, t_options *options)
+void	ping_print_intro(char *address_ip, struct addrinfo *addrinfo)
 {
-	char address_ip[16];
-
-	(void)options;
 	ft_bzero(address_ip, sizeof(address_ip));
 	inet_ntop(
 		addrinfo->ai_addr->sa_family,
@@ -45,28 +42,17 @@ void	ping_print_stats(struct addrinfo *addrinfo)
 	ft_printf("rtt min/avg/max/mdev = xxxxxxxxxxxx\n");
 }
 
-void	ping_print_loop(struct ip *ipheader, struct addrinfo *addrinfo, t_options *options)
+void	ping_print_loop(struct ip *ipheader, struct icmp_packet *icmp, t_options *options)
 {
-	char address_ip[16];
-	struct icmphdr *icmp;
-
 	(void)options;
-	ft_bzero(address_ip, sizeof(address_ip));
-	inet_ntop(
-		addrinfo->ai_addr->sa_family,
-		addrinfo->ai_addr->sa_data + 2, 
-		address_ip,
-		addrinfo->ai_addrlen
-	);
-	icmp = (struct icmphdr *)((char *)ipheader + sizeof(struct ip));
 	ft_printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=0.053 ms\n",
 		ICMP_DATA_LEN + sizeof(struct icmphdr),
-		addrinfo->ai_canonname,
-		address_ip,
-		ft_htons(icmp->un.echo.sequence),
+		g_pingu.addrinfo->ai_canonname,
+		g_pingu.address_ip,
+		ft_htons(icmp->header.un.echo.sequence),
 		ipheader->ip_ttl
 	);
-	print_memory((char *)ipheader + sizeof(struct ip), sizeof(struct icmp_packet));
+//	print_memory((char *)ipheader + sizeof(struct ip), sizeof(struct icmp_packet));
 	return ;
 }
 

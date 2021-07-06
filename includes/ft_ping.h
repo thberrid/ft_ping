@@ -87,23 +87,28 @@ typedef struct	s_ping_stats
 
 typedef struct	s_pingdata
 {
-	int				sequence;
-	struct addrinfo	addrinfo;
-	t_options		options;
+	int					sockfd;
+	int					sequence;
+	struct icmp_packet	sendpacket;
+	struct addrinfo		*addrinfo;
+	char 				address_ip[16];
+	t_options			*options;
 }				t_pingdata;
 
+extern			t_pingdata g_pingu;
 
 int				check_requirements(int ac);
 
-int				ping_loop(t_options *options);
-
-int 			ping_prepare(struct icmp_packet *packet, int *sockfd, struct addrinfo **addrinfo, t_options *options);
-void 			ping_packet_update(struct icmp_packet *packet, int index);
 unsigned short	checksum(void *data, int len);
+
+int 			ping_prepare(int ac, char **av, t_options *options);
 int				ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options);
 
-void 			ping_print_intro(struct addrinfo *addrinfo, t_options *options);
-void			ping_print_loop(struct ip *ipheader, struct addrinfo *addrinfo, t_options *options);
+void			ping_send(int signum);
+void			ping_end(int signum);
+
+void 			ping_print_intro(char *address_ip, struct addrinfo *addrinfo);
+void			ping_print_loop(struct ip *ipheader, struct icmp_packet *icmp, t_options *options);
 void			ping_print_stats(struct addrinfo *addrinfo);
 
 #endif

@@ -12,14 +12,14 @@
 
 #include <ft_ping.h>
 
-static void	ipheader_prepare(struct msghdr *ipheader, struct iovec *s_iovec, char *s_iov_base, struct addrinfo *addrinfo)
+static void	ipheader_prepare(struct msghdr *response, struct iovec *s_iovec, char *s_iov_base, struct addrinfo *addrinfo)
 {
-	bzero(ipheader, sizeof(struct msghdr));
+	bzero(response, sizeof(struct msghdr));
 	ft_memset(s_iov_base, 0x6e, IOVLEN);
-	ipheader->msg_name = addrinfo->ai_addr;                                           
-	ipheader->msg_namelen = addrinfo->ai_addrlen;
-	ipheader->msg_iovlen = 1;
-	ipheader->msg_iov = s_iovec;
+	response->msg_name = addrinfo->ai_addr;                                           
+	response->msg_namelen = addrinfo->ai_addrlen;
+	response->msg_iovlen = 1;
+	response->msg_iov = s_iovec;
 	s_iovec->iov_base = s_iov_base;
 	s_iovec->iov_len = IOVLEN;
 }
@@ -27,25 +27,19 @@ static void	ipheader_prepare(struct msghdr *ipheader, struct iovec *s_iovec, cha
 int			ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options)
 {
 	int					retrn;
-	struct msghdr		msg;
-	struct icmp_packet	*icmp;
+	struct msghdr		response;
 	struct iovec		s_iovec;
 	char				s_iov_base[IOVLEN];
+	struct icmp_packet	*icmp;
 
-
-	ipheader_prepare(&msg, &s_iovec, s_iov_base, addrinfo);
-	retrn = recvmsg(sockfd, &msg, 0);
+	ipheader_prepare(&response, &s_iovec, s_iov_base, addrinfo);
+	retrn = recvmsg(sockfd, &response, 0);
 	if (retrn < 1)
 		return (retrn);
-	ping_print_loop((struct ip *)s_iov_base, addrinfo, options);
+	icmp = (struct icmp_packet *)((char *)s_iov_base + sizeof(struct ip));
+	ping_print_loop((struct ip *)s_iov_base, icmp, options);
+	if (options->count > 0 && ft_htons(icmp->header.un.echo.sequence) >= options->count)
+		ping_end(e_error_none);
 	alarm(2);
-	/*
-	if (!ft_strcmp(options->hostname, "localhost"))
-		recvmsg(sockfd, &msg, 0);
-	retrn = recvmsg(sockfd, &msg, 0);
-	if (retrn < 1)
-		return (retrn);
-	ping_print_loop((struct ip *)s_iov_base, addrinfo, options);
-	*/
 	return (e_error_none);
 }

@@ -1,16 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ping_prepare_update_packet.c                       :+:      :+:    :+:   */
+/*   ping_prepare.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thberrid <thberrid@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/03 14:10:20 by thberrid          #+#    #+#             */
-/*   Updated: 2021/07/03 14:10:25 by thberrid         ###   ########.fr       */
+/*   Created: 2021/07/06 17:00:42 by thberrid          #+#    #+#             */
+/*   Updated: 2021/07/06 17:00:46 by thberrid         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <ft_ping.h>
+#include <ft_ping_parser.h>
 
 static int	set_sockdf(int *sockfd)
 {
@@ -39,23 +40,25 @@ static void	set_packet(struct icmp_packet *packet)
 	packet->header.type = ICMP_TYPE_ECHO_REQUEST;
 	packet->header.code = ICMP_CODE_ECHO_REPLY;
 	packet->header.un.echo.id = ft_htons(getpid());
+	packet->header.un.echo.sequence = 0;
 	ft_memset(packet->data, 'o', ICMP_DATA_LEN);
 	return ;
 }
 
-void		ping_packet_update(struct icmp_packet *packet, int index)
+int 		ping_prepare(int ac, char **av, t_options *options) 		
 {
-	packet->header.un.echo.sequence = ft_htons(index);
-	packet->header.checksum = 0;
-	packet->header.checksum = checksum(packet, sizeof(struct icmp_packet));
-}
+	int		retrn;
 
-int 		ping_prepare(struct icmp_packet *packet, int *sockfd, struct addrinfo **addrinfo, t_options *options) 		
-{
-	if (set_sockdf(sockfd))
+	retrn = parsing(ac, av, options);
+	if (retrn != e_error_none)
+		return (retrn);
+	if (set_sockdf(&g_pingu.sockfd))
 		return (e_error_socket_creation);
-	if (set_addrinfo(addrinfo, options))
+	if (set_addrinfo(&g_pingu.addrinfo, options))
 		return (e_error_addrinfo_creation);
-	set_packet(packet);
+	g_pingu.options = options;
+	set_packet(&g_pingu.sendpacket);
+	signal(SIGALRM, &ping_send);
+	signal(SIGINT, &ping_end);
 	return (e_error_none);
 }

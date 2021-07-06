@@ -15,10 +15,11 @@ SRCS	= 	main.c \
 			checksum.c \
 			parsing.c \
 			parsing_fns.c \
-			ping_loop.c \
+			ping_prepare.c \
 			ping_print.c \
-			ping_prepare_update_packet.c \
 			ping_reception.c \
+			ping_send.c \
+			ping_end.c \
 			print_return_code.c
 NAME_H	= 	ft_ping.h \
 			ft_ping_errors.h \
