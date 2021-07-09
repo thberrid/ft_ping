@@ -12,18 +12,12 @@
 
 #include <ft_ping.h>
 
-static long	tv_to_ms(struct timeval *tv)
+double	tv_to_f(struct timeval *tv)
 {
-	return ((tv->tv_sec * 1000) + (tv->tv_usec / 1000));
+	return ((double)tv->tv_sec * 1000 + (double)tv->tv_usec / 1000);
 }
 
-int		ping_istimeout(struct timeval *start)
+long	tv_to_ms(struct timeval *tv)
 {
-	struct timeval	now;
-
-	gettimeofday(&now, NULL);
-	ft_printf(":: %d %d\n", tv_to_ms(start), tv_to_ms(&now));
-	if (tv_to_ms(&now) - tv_to_ms(start) > PING_INTERVAL)
-		return (1);
-	return (0);
+	return ((tv->tv_sec * 1000) + (tv->tv_usec / 1000));
 }

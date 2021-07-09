@@ -27,6 +27,15 @@ static void	response_prepare(struct msghdr *response,
 	s_iovec->iov_len = IOVLEN;
 }
 
+static int	ping_filter(struct icmp_packet	*icmp)
+{
+	if (icmp->header.type == ICMP_TYPE_ECHO_REQUEST)
+		return (NOT_RECEIVED);
+	if (icmp->header.un.echo.id != ft_htons(getpid()))
+		return (NOT_RECEIVED);
+	return (RECEIVED);
+}
+
 int			ping_reception(int sockfd,
 				struct addrinfo *addrinfo, 
 				t_options *options)
@@ -36,7 +45,6 @@ int			ping_reception(int sockfd,
 	char				s_iov_base[IOVLEN];
 	struct icmp_packet	*icmp;
 
-	ft_printf("CALL Reception\n");
 	response_prepare(&response, &s_iovec, s_iov_base, addrinfo);
 	if (recvmsg(sockfd, &response, 0) <= 0)
 	{
@@ -44,13 +52,9 @@ int			ping_reception(int sockfd,
 		exit(e_error_recvmsg);
 	}
 	icmp = (struct icmp_packet *)((char *)s_iov_base + sizeof(struct ip));
-	if (icmp->header.type == ICMP_TYPE_ECHO_REQUEST)
-	{
-		ft_printf("echo rechest\n");
+	if (ping_filter(icmp) == NOT_RECEIVED)
 		return (NOT_RECEIVED);
-	}
-	ft_printf("echo reply\n");
 	ping_print_loop((struct ip *)s_iov_base, icmp, options);
-	// update statistics
+	ping_update_stats(RECEIVED);
 	return (RECEIVED);
 }

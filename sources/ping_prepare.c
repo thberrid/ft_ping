@@ -18,6 +18,7 @@ static int	set_sockdf(int *sockfd)
 	*sockfd = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
 	if (*sockfd < 2)
 		return (1);
+	int on = 1;
 	return (0);
 }
 
@@ -56,8 +57,8 @@ int 		ping_prepare(int ac, char **av, t_options *options)
 	if (set_addrinfo(&g_pingu.addrinfo, options))
 		return (e_error_addrinfo_creation);
 	g_pingu.options = options;
-	g_pingu.sequence = 0;
 	set_packet(&g_pingu.sendpacket);
+	gettimeofday(&g_pingu.stats.begin, NULL);
 	signal(SIGALRM, &ping_alarm);
 	signal(SIGINT, &ping_end);
 	return (e_error_none);

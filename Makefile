@@ -21,6 +21,7 @@ SRCS	= 	main.c \
 			ping_print.c \
 			ping_reception.c \
 			ping_send.c \
+			ping_stats.c \
 			ping_end.c \
 			ping_time.c \
 			print_return_code.c

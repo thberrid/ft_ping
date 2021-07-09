@@ -36,7 +36,7 @@
 # define IOVLEN  				84
 # define ICMP_DATA_LEN			56
 
-# define PING_INTERVAL			3
+# define PING_INTERVAL			1
 
 # define ICMP_TYPE_ECHO_REQUEST	8
 # define ICMP_CODE_ECHO_REQUEST	0
@@ -95,7 +95,7 @@ typedef struct	s_pingstats
 {
 	unsigned int	lost;
 	unsigned int	received;
-	long			time;
+	struct timeval	begin;
 	long			min;
 	long			max;
 	long			avg;
@@ -111,7 +111,8 @@ typedef struct	s_pingdata
 {
 	int					sockfd;
 	int					sequence;
-	char 				status_previous_ping;
+	char 				previous_ping_status;
+	struct timeval		previous_ping_sendtime;
 	struct icmp_packet	sendpacket;
 	struct addrinfo		*addrinfo;
 	char 				address_ip[16];
@@ -137,5 +138,10 @@ void			ping_end(int signum);
 void 			ping_print_intro(char *address_ip, struct addrinfo *addrinfo);
 void			ping_print_loop(struct ip *ipheader, struct icmp_packet *icmp, t_options *options);
 void			ping_print_stats(struct addrinfo *addrinfo);
+
+double			tv_to_f(struct timeval *tv);
+long			tv_to_ms(struct timeval *tv);
+int				ft_percent(int subset, int set);
+void			ping_update_stats(int status);
 
 #endif

@@ -14,14 +14,17 @@
 
 static void		ping_packet_update(struct icmp_packet *packet, int sequence)
 {
-	packet->header.type = ICMP_TYPE_ECHO_REQUEST;
-	packet->header.code = ICMP_CODE_ECHO_REQUEST;
 	packet->header.un.echo.sequence = ft_htons(sequence);
 	packet->header.checksum = 0;
 	packet->header.checksum = checksum(packet, sizeof(struct icmp_packet));
 }
 
-void			ping_send(int sockfd, struct addrinfo *addrinfo, struct icmp_packet *packet, int sequence)
+void			ping_send(
+					int sockfd,
+					struct addrinfo *addrinfo,
+					struct icmp_packet *packet, 
+					int sequence
+				)
 {
 	int		retrn;
 
@@ -34,12 +37,12 @@ void			ping_send(int sockfd, struct addrinfo *addrinfo, struct icmp_packet *pack
 		addrinfo->ai_addr,
 		addrinfo->ai_addrlen
 	);
-	ft_printf("SEND (%d)\n", retrn);
 	if (retrn <= 0)
 	{
 		print_return_code(e_error_sendto);
 		exit(e_error_sendto);
 	}
-	g_pingu.status_previous_ping = SEND;
+	g_pingu.previous_ping_status = SEND;
+	gettimeofday(&g_pingu.previous_ping_sendtime, NULL);
 	return ;
 }

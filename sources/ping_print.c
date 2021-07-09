@@ -32,28 +32,34 @@ void	ping_print_intro(char *address_ip, struct addrinfo *addrinfo)
 
 void	ping_print_stats(struct addrinfo *addrinfo)
 {
+	struct timeval	now;
+
+	gettimeofday(&now, NULL);
 	ft_printf("\n--- %s ping statistics ---\n", addrinfo->ai_canonname);
-	ft_printf("%d packets transmitted, %d received, %d%% loss, time %dms\n",
-		1,
-		1,
-		0,
-		0
+	ft_printf("%d packets transmitted, %d received, %d%% packet loss, time %lms\n",
+		g_pingu.stats.received + g_pingu.stats.lost,
+		g_pingu.stats.received,
+		ft_percent(g_pingu.stats.lost, g_pingu.stats.received + g_pingu.stats.lost),
+		(tv_to_ms(&now) - tv_to_ms(&g_pingu.stats.begin))
 	);
 	ft_printf("rtt min/avg/max/mdev = xxxxxxxxxxxx\n");
 }
-
+#include <stdio.h>
 void	ping_print_loop(struct ip *ipheader, struct icmp_packet *icmp, t_options *options)
 {
+	struct timeval	now;
+	float			delta;
+
 	(void)options;
-	ft_printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=0.053 ms\n",
+	gettimeofday(&now, NULL);
+	delta = tv_to_f(&now) - tv_to_f(&g_pingu.previous_ping_sendtime);
+	ft_printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=%5f ms\n",
 		ICMP_DATA_LEN + sizeof(struct icmphdr),
 		g_pingu.addrinfo->ai_canonname,
 		g_pingu.address_ip,
 		ft_htons(icmp->header.un.echo.sequence),
-		ipheader->ip_ttl
+		ipheader->ip_ttl,
+		delta
 	);
-//	print_memory(ipheader, sizeof(struct ip));
-//	ft_printf("\n");
-//	print_memory((char *)ipheader + sizeof(struct ip), sizeof(struct icmp_packet));
 	return ;
 }
