@@ -24,13 +24,7 @@ int 		main(int ac, char **av)
 	if (retrn == e_error_none)
 		retrn = ping_prepare(ac, av, &options);
 	if (retrn == e_error_none)
-	{
-		ping_print_intro(g_pingu.address_ip, g_pingu.addrinfo);
-		g_pingu.status_previous_ping = NOTHING_SEND;
-		ping(SIGALRM);
-		while (1)						// listening...
-			;
-	}
+		ping();
 	print_return_code(retrn);
 	return (retrn);
 }

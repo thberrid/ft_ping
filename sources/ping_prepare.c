@@ -39,7 +39,7 @@ static void	set_packet(struct icmp_packet *packet)
 	ft_bzero(packet, sizeof(struct icmp_packet));
 	packet->header.type = ICMP_TYPE_ECHO_REQUEST;
 	packet->header.code = ICMP_CODE_ECHO_REPLY;
-	packet->header.un.echo.id = getpid();
+	packet->header.un.echo.id = ft_htons(getpid());
 	ft_memset(packet->data, 'o', ICMP_DATA_LEN);
 	return ;
 }
@@ -58,7 +58,7 @@ int 		ping_prepare(int ac, char **av, t_options *options)
 	g_pingu.options = options;
 	g_pingu.sequence = 0;
 	set_packet(&g_pingu.sendpacket);
-	signal(SIGALRM, &ping);
+	signal(SIGALRM, &ping_alarm);
 	signal(SIGINT, &ping_end);
 	return (e_error_none);
 }

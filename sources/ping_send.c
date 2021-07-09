@@ -14,18 +14,32 @@
 
 static void		ping_packet_update(struct icmp_packet *packet, int sequence)
 {
-	packet->header.un.echo.sequence = sequence;
+	packet->header.type = ICMP_TYPE_ECHO_REQUEST;
+	packet->header.code = ICMP_CODE_ECHO_REQUEST;
+	packet->header.un.echo.sequence = ft_htons(sequence);
 	packet->header.checksum = 0;
 	packet->header.checksum = checksum(packet, sizeof(struct icmp_packet));
 }
 
-int				ping_send(int sockfd, struct addrinfo *addrinfo, struct icmp_packet *packet, int sequence)
+void			ping_send(int sockfd, struct addrinfo *addrinfo, struct icmp_packet *packet, int sequence)
 {
 	int		retrn;
 
 	ping_packet_update(packet, sequence);
-	retrn = sendto(sockfd, packet, sizeof(struct icmp_packet), 0, addrinfo->ai_addr, addrinfo->ai_addrlen);
+	retrn = sendto(
+		sockfd,
+		packet,
+		sizeof(struct icmp_packet),
+		0,
+		addrinfo->ai_addr,
+		addrinfo->ai_addrlen
+	);
+	ft_printf("SEND (%d)\n", retrn);
 	if (retrn <= 0)
-		return (e_error_sendto);
-	return (e_error_none);
+	{
+		print_return_code(e_error_sendto);
+		exit(e_error_sendto);
+	}
+	g_pingu.status_previous_ping = SEND;
+	return ;
 }

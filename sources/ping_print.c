@@ -45,16 +45,15 @@ void	ping_print_stats(struct addrinfo *addrinfo)
 void	ping_print_loop(struct ip *ipheader, struct icmp_packet *icmp, t_options *options)
 {
 	(void)options;
-	ft_printf("\n");
 	ft_printf("%d bytes from %s (%s): icmp_seq=%d ttl=%d time=0.053 ms\n",
 		ICMP_DATA_LEN + sizeof(struct icmphdr),
 		g_pingu.addrinfo->ai_canonname,
 		g_pingu.address_ip,
-		icmp->header.un.echo.sequence,
+		ft_htons(icmp->header.un.echo.sequence),
 		ipheader->ip_ttl
 	);
-	print_memory(ipheader, sizeof(struct ip));
-	ft_printf("\n");
-	print_memory((char *)ipheader + sizeof(struct ip), sizeof(struct icmp_packet));
+//	print_memory(ipheader, sizeof(struct ip));
+//	ft_printf("\n");
+//	print_memory((char *)ipheader + sizeof(struct ip), sizeof(struct icmp_packet));
 	return ;
 }

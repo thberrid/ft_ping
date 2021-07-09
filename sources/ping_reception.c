@@ -12,9 +12,12 @@
 
 #include <ft_ping.h>
 
-static void	response_prepare(struct msghdr *response, struct iovec *s_iovec, char *s_iov_base, struct addrinfo *addrinfo)
+static void	response_prepare(struct msghdr *response,
+				struct iovec *s_iovec,
+				char *s_iov_base,
+				struct addrinfo *addrinfo)
 {
-	bzero(response, sizeof(struct msghdr));
+	ft_bzero(response, sizeof(struct msghdr));
 	ft_memset(s_iov_base, 0x6e, IOVLEN);
 	response->msg_name = addrinfo->ai_addr;                                           
 	response->msg_namelen = addrinfo->ai_addrlen;
@@ -24,29 +27,30 @@ static void	response_prepare(struct msghdr *response, struct iovec *s_iovec, cha
 	s_iovec->iov_len = IOVLEN;
 }
 
-int			ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options, int sequence)
+int			ping_reception(int sockfd,
+				struct addrinfo *addrinfo, 
+				t_options *options)
 {
 	struct msghdr		response;
 	struct iovec		s_iovec;
 	char				s_iov_base[IOVLEN];
 	struct icmp_packet	*icmp;
-	struct timeval		start;
 
-	(void)sequence;
-	gettimeofday(&start, NULL);
-	while (1)
+	ft_printf("CALL Reception\n");
+	response_prepare(&response, &s_iovec, s_iov_base, addrinfo);
+	if (recvmsg(sockfd, &response, 0) <= 0)
 	{
-		response_prepare(&response, &s_iovec, s_iov_base, addrinfo);
-		if (recvmsg(sockfd, &response, 0) <= 0)
-			return (e_error_recvmsg);
-		icmp = (struct icmp_packet *)((char *)s_iov_base + sizeof(struct ip));
-		if (icmp->header.type == ICMP_TYPE_ECHO_REQUEST)
-			continue ;
-		if (icmp->header.un.echo.sequence != sequence)
-			continue ;
-		ping_print_loop((struct ip *)s_iov_base, icmp, options);
-		// update statistics
-		break ;
-	}	
-	return (e_error_none);
+		print_return_code(e_error_recvmsg);
+		exit(e_error_recvmsg);
+	}
+	icmp = (struct icmp_packet *)((char *)s_iov_base + sizeof(struct ip));
+	if (icmp->header.type == ICMP_TYPE_ECHO_REQUEST)
+	{
+		ft_printf("echo rechest\n");
+		return (NOT_RECEIVED);
+	}
+	ft_printf("echo reply\n");
+	ping_print_loop((struct ip *)s_iov_base, icmp, options);
+	// update statistics
+	return (RECEIVED);
 }

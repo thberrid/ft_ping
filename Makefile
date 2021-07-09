@@ -16,6 +16,7 @@ SRCS	= 	main.c \
 			parsing.c \
 			parsing_fns.c \
 			ping.c \
+			ping_alarm.c \
 			ping_prepare.c \
 			ping_print.c \
 			ping_reception.c \

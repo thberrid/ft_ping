@@ -23,6 +23,8 @@
 # include <arpa/inet.h>
 # include <signal.h>
 
+# include <errno.h>
+
 # define HELP_STRING		"Usage: sudo ./ft_ping [-v] [-c count] destination"
 
 /*
@@ -34,9 +36,10 @@
 # define IOVLEN  				84
 # define ICMP_DATA_LEN			56
 
-# define PING_INTERVAL			2
+# define PING_INTERVAL			3
 
 # define ICMP_TYPE_ECHO_REQUEST	8
+# define ICMP_CODE_ECHO_REQUEST	0
 # define ICMP_CODE_ECHO_REPLY	0
 
 struct icmp_packet
@@ -99,9 +102,10 @@ typedef struct	s_pingstats
 	long			mdev;
 }				t_pingstats;
 
-# define NOTHING_SEND	0
-# define NOT_RECEIVED	1
-# define RECEIVED		2
+# define NOT_SEND		0
+# define SEND			1
+# define NOT_RECEIVED	2
+# define RECEIVED		4
 
 typedef struct	s_pingdata
 {
@@ -121,13 +125,12 @@ int				check_requirements(int ac);
 
 unsigned short	checksum(void *data, int len);
 
-void			ping(int signum);
+void			ping(void);
+void			ping_alarm(int signum);
 
 int 			ping_prepare(int ac, char **av, t_options *options);
-int				ping_send(int sockfd, struct addrinfo *addrinfo, struct icmp_packet *packet, int sequence);
-int				ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options, int sequence);
-
-int				ping_istimeout(struct timeval *start);
+void			ping_send(int sockfd, struct addrinfo *addrinfo, struct icmp_packet *packet, int sequence);
+int				ping_reception(int sockfd, struct addrinfo *addrinfo, t_options *options);
 
 void			ping_end(int signum);
 
